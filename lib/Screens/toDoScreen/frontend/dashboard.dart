@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/tasklist.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_custom_textfield.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_dateandtime_.dart';
@@ -14,14 +15,14 @@ class MainDashboard extends StatefulWidget {
 
 class _MainActivityState extends State<MainDashboard> {
   final String _email;
+  TaskList taskList = new TaskList();
+  String chosenDate = "", chosenTime = "", title = "", desc = "";
   _MainActivityState(this._email);
   @override
   void initState() {
     super.initState();
   }
 
-  TaskList taskList = new TaskList();
-  String chosenDate = "", chosenTime = "", title = "", desc = "";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,8 +39,16 @@ class _MainActivityState extends State<MainDashboard> {
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext ctxt, int index) {
-                  return new ViewHolder(
-                      snapshot.data.documents[index]['Title']);
+                  return Dismissible(
+                    key: Key(snapshot.data.documents[index]['Title']),
+                    onDismissed: (direction) => FirebaseFirestore.instance
+                        .runTransaction((transaction) async {
+                      transaction
+                          .delete(snapshot.data.documents[index].reference);
+                      Fluttertoast.showToast(msg: "Task has been deleted!");
+                    }),
+                    child: ViewHolder(snapshot.data.documents[index]['Title']),
+                  );
                 },
               );
             }),
@@ -85,8 +94,11 @@ class _MainActivityState extends State<MainDashboard> {
                     SizedBox(height: 10),
                     MaterialButton(
                       onPressed: () {
-                        createRecord(DashboardCustomTextField.getTitle().text,
-                            DashboardCustomTextField.getDesc().text);
+                        createRecord(
+                            DashboardCustomTextField.getTitle().text,
+                            DashboardCustomTextField.getDesc().text,
+                            chosenDate,
+                            chosenTime);
                       },
                       color: Colors.teal,
                       child: Icon(Icons.save, size: 50, color: Colors.white),
@@ -110,13 +122,19 @@ class _MainActivityState extends State<MainDashboard> {
 
   void setDescriptionForTask(String desc) => this.desc = desc;
 
-  void createRecord(String _title, String _desc) async {
+  void createRecord(String _title, String _desc, String _chosenDate,
+      String _chosenTime) async {
     final databaseReference = FirebaseFirestore.instance;
     await databaseReference
         .collection("Tasks")
         .doc(_email)
         .collection("User_Tasks_List")
         .doc()
-        .set({'Title': _title, 'description': _desc});
+        .set({
+      'Title': _title,
+      'description': _desc,
+      'date': _chosenDate,
+      'time': _chosenTime
+    });
   }
 }
