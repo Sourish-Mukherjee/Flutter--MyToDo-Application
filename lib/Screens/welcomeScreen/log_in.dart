@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mytodoapp/Screens/toDoScreen/frontend/dashboard.dart';
+import 'package:mytodoapp/Screens/toDoScreen/dashboard.dart';
 import 'package:mytodoapp/Screens/welcomeScreen/components/frontEnd/welcome_customImage.dart';
 import 'package:mytodoapp/Screens/welcomeScreen/components/backEnd/welcome_login_google.dart';
 import 'package:mytodoapp/Screens/welcomeScreen/register.dart';
@@ -166,7 +166,7 @@ class LoginPageState extends State<LogIn> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return MainDashboard("90385rishi@gmail.com".trim());
+                  return MainDashboard(FirebaseAuth.instance.currentUser.email);
                 },
               ),
             );
