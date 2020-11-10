@@ -56,18 +56,14 @@ class _MainActivityState extends State<MainDashboard> {
                           return InkWell(
                             onDoubleTap: () => _popupDialog(
                                 context, snapshot.data.documents[index]),
-                            child: Dismissible(
-                              key: Key(snapshot.data.documents[index]['Title']),
-                              onDismissed: (direction) => FirebaseFirestore
-                                  .instance
-                                  .runTransaction((transaction) async {
-                                transaction.delete(
-                                    snapshot.data.documents[index].reference);
-                                Fluttertoast.showToast(
-                                    msg: "Task has been deleted!");
-                              }),
-                              child: ViewHolder(snapshot.data.documents[index]),
-                            ),
+                            onLongPress: () => FirebaseFirestore.instance
+                                .runTransaction((transaction) async {
+                              transaction.delete(
+                                  snapshot.data.documents[index].reference);
+                              Fluttertoast.showToast(
+                                  msg: "Task has been deleted!");
+                            }),
+                            child: ViewHolder(snapshot.data.documents[index]),
                           );
                         },
                       );
