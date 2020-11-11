@@ -6,22 +6,35 @@ class ViewHolder extends StatelessWidget {
   ViewHolder(this.documentSnapshot);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.only(left: 50, top: 20, bottom: 20),
-          decoration: BoxDecoration(
-            color: Colors.white12,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
+    return Container(
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 30, top: 20, bottom: 20),
+      decoration: BoxDecoration(
+        color: Colors.white12,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
             documentSnapshot['Title'],
-            style: TextStyle(color: Colors.white, fontSize: 30),
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+            ),
           ),
-        ),
-      ],
+          Expanded(child: Divider()),
+          Container(
+              margin: const EdgeInsets.only(right: 15),
+              constraints: BoxConstraints(maxHeight: 20),
+              child: Image.asset(
+                'assests/Images/drag_icon.png',
+                fit: BoxFit.cover,
+                color: Colors.teal,
+              ))
+        ],
+      ),
     );
   }
 }

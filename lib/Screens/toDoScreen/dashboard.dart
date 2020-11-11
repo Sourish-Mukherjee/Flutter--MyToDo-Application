@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/tasklist.dart';
+import 'package:mytodoapp/Screens/toDoScreen/backend/viewHolder.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_custom_textfield.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_dateandtime_.dart';
-import 'package:mytodoapp/Screens/toDoScreen/backend/viewHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MainDashboard extends StatefulWidget {
@@ -15,6 +15,7 @@ class MainDashboard extends StatefulWidget {
 
 class _MainActivityState extends State<MainDashboard> {
   final String _email;
+  List<DocumentSnapshot> _docs;
   TaskList taskList = new TaskList();
   String chosenDate = "", chosenTime = "", title = "", desc = "";
   _MainActivityState(this._email);
@@ -50,22 +51,25 @@ class _MainActivityState extends State<MainDashboard> {
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) return const Text("Loading!...");
-                      return ListView.builder(
-                        itemCount: snapshot.data.documents.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return InkWell(
-                            onDoubleTap: () => _popupDialog(
-                                context, snapshot.data.documents[index]),
-                            onLongPress: () => FirebaseFirestore.instance
-                                .runTransaction((transaction) async {
-                              transaction.delete(
-                                  snapshot.data.documents[index].reference);
-                              Fluttertoast.showToast(
-                                  msg: "Task has been deleted!");
-                            }),
-                            child: ViewHolder(snapshot.data.documents[index]),
-                          );
-                        },
+                      _docs = snapshot.data.documents;
+                      return Theme(
+                        data: ThemeData(canvasColor: Colors.transparent),
+                        child: ReorderableListView(
+                            children: _docs
+                                .map((e) => InkWell(
+                                    key: ObjectKey(e),
+                                    onTap: () => _popupDialog(context, e),
+                                    onDoubleTap: () => FirebaseFirestore
+                                            .instance
+                                            .runTransaction(
+                                                (transaction) async {
+                                          transaction.delete(e.reference);
+                                          Fluttertoast.showToast(
+                                              msg: "Task has been deleted!");
+                                        }),
+                                    child: ViewHolder(e)))
+                                .toList(),
+                            onReorder: onReorder),
                       );
                     }),
               ),
@@ -182,5 +186,26 @@ class _MainActivityState extends State<MainDashboard> {
             ],
           );
         });
+  }
+
+  onReorder(oldIndex, newIndex) {
+    if (oldIndex < newIndex) newIndex -= 1;
+    _docs.insert(newIndex, _docs.removeAt(oldIndex));
+    updateData();
+  }
+
+  void updateData() async {
+    final FirebaseFirestore databaseReference = FirebaseFirestore.instance;
+    databaseReference
+        .collection("Tasks")
+        .doc(_email)
+        .collection("User_Tasks_List")
+        .get()
+        .then((QuerySnapshot snapshot) {
+      for (DocumentSnapshot document in snapshot.docs) {
+        print(document['Title']);
+      }
+      ;
+    });
   }
 }
