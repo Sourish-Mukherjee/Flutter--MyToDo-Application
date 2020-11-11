@@ -15,6 +15,7 @@ class MainDashboard extends StatefulWidget {
 
 class _MainActivityState extends State<MainDashboard> {
   final String _email;
+  int _index = 0;
   List<DocumentSnapshot> _docs;
   TaskList taskList = new TaskList();
   String chosenDate = "", chosenTime = "", title = "", desc = "";
@@ -52,6 +53,8 @@ class _MainActivityState extends State<MainDashboard> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) return const Text("Loading!...");
                       _docs = snapshot.data.documents;
+                      _index = _docs.length;
+                      _docs.sort((a, b) => a['index'].compareTo(b['index']));
                       return Theme(
                         data: ThemeData(canvasColor: Colors.transparent),
                         child: ReorderableListView(
@@ -153,12 +156,13 @@ class _MainActivityState extends State<MainDashboard> {
         .collection("Tasks")
         .doc(_email)
         .collection("User_Tasks_List")
-        .doc()
+        .doc(_title)
         .set({
       'Title': _title,
       'description': _desc,
       'date': _chosenDate,
-      'time': _chosenTime
+      'time': _chosenTime,
+      'index': _index++
     });
   }
 
@@ -189,23 +193,68 @@ class _MainActivityState extends State<MainDashboard> {
   }
 
   onReorder(oldIndex, newIndex) {
-    if (oldIndex < newIndex) newIndex -= 1;
-    _docs.insert(newIndex, _docs.removeAt(oldIndex));
-    updateData();
+    if (oldIndex < newIndex)
+      updateData(oldIndex, newIndex - 1);
+    else
+      updateData(oldIndex, newIndex);
   }
 
-  void updateData() async {
+  void updateData(int oldIndex, int newIndex) async {
     final FirebaseFirestore databaseReference = FirebaseFirestore.instance;
-    databaseReference
-        .collection("Tasks")
-        .doc(_email)
-        .collection("User_Tasks_List")
-        .get()
-        .then((QuerySnapshot snapshot) {
-      for (DocumentSnapshot document in snapshot.docs) {
-        print(document['Title']);
-      }
-      ;
-    });
+    if (oldIndex < newIndex) {
+      databaseReference
+          .collection("Tasks")
+          .doc(_email)
+          .collection("User_Tasks_List")
+          .get()
+          .then((QuerySnapshot snapshot) {
+        for (DocumentSnapshot documentSnapshot in snapshot.docs) {
+          if (documentSnapshot['index'] >= oldIndex &&
+              documentSnapshot['index'] <= newIndex) {
+            if (documentSnapshot['index'] == oldIndex) {
+              databaseReference
+                  .collection("Tasks")
+                  .doc(_email)
+                  .collection("User_Tasks_List")
+                  .doc(documentSnapshot['Title'])
+                  .update({'index': newIndex});
+            } else
+              databaseReference
+                  .collection("Tasks")
+                  .doc(_email)
+                  .collection("User_Tasks_List")
+                  .doc(documentSnapshot['Title'])
+                  .update({'index': documentSnapshot['index'] - 1});
+          }
+        }
+      });
+    } else {
+      databaseReference
+          .collection("Tasks")
+          .doc(_email)
+          .collection("User_Tasks_List")
+          .get()
+          .then((QuerySnapshot snapshot) {
+        for (DocumentSnapshot documentSnapshot in snapshot.docs) {
+          if (documentSnapshot['index'] <= oldIndex &&
+              documentSnapshot['index'] >= newIndex) {
+            if (documentSnapshot['index'] == oldIndex) {
+              databaseReference
+                  .collection("Tasks")
+                  .doc(_email)
+                  .collection("User_Tasks_List")
+                  .doc(documentSnapshot['Title'])
+                  .update({'index': newIndex});
+            } else
+              databaseReference
+                  .collection("Tasks")
+                  .doc(_email)
+                  .collection("User_Tasks_List")
+                  .doc(documentSnapshot['Title'])
+                  .update({'index': documentSnapshot['index'] + 1});
+          }
+        }
+      });
+    }
   }
 }
