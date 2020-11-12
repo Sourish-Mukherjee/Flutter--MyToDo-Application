@@ -62,7 +62,8 @@ class _MainActivityState extends State<MainDashboard> {
                                 .map((e) => InkWell(
                                     key: ObjectKey(e),
                                     onTap: () => _popupDialog(context, e),
-                                    onDoubleTap: () => _showOnDoubleTap(context, e),
+                                    onDoubleTap: () =>
+                                        _showOnDoubleTap(context, e, snapshot),
                                     child: ViewHolder(e)))
                                 .toList(),
                             onReorder: onReorder),
@@ -197,13 +198,13 @@ class _MainActivityState extends State<MainDashboard> {
 
   onReorder(oldIndex, newIndex) {
     if (oldIndex < newIndex)
-      updateData(oldIndex, newIndex - 1);
+      updateData(oldIndex, newIndex - 1, true);
     else
-      updateData(oldIndex, newIndex);
+      updateData(oldIndex, newIndex, true);
   }
 
-  void updateData(int oldIndex, int newIndex) async {
-    final FirebaseFirestore databaseReference = FirebaseFirestore.instance;
+  void updateData(int oldIndex, int newIndex, bool field) async {
+    FirebaseFirestore databaseReference = FirebaseFirestore.instance;
     if (oldIndex < newIndex) {
       databaseReference
           .collection("Tasks")
@@ -214,7 +215,7 @@ class _MainActivityState extends State<MainDashboard> {
         for (DocumentSnapshot documentSnapshot in snapshot.docs) {
           if (documentSnapshot['index'] >= oldIndex &&
               documentSnapshot['index'] <= newIndex) {
-            if (documentSnapshot['index'] == oldIndex) {
+            if (documentSnapshot['index'] == oldIndex && field == true) {
               databaseReference
                   .collection("Tasks")
                   .doc(_email)
@@ -230,6 +231,8 @@ class _MainActivityState extends State<MainDashboard> {
                   .update({'index': documentSnapshot['index'] - 1});
           }
         }
+      }).catchError((err) {
+        print('$err');
       });
     } else {
       databaseReference
@@ -241,7 +244,7 @@ class _MainActivityState extends State<MainDashboard> {
         for (DocumentSnapshot documentSnapshot in snapshot.docs) {
           if (documentSnapshot['index'] <= oldIndex &&
               documentSnapshot['index'] >= newIndex) {
-            if (documentSnapshot['index'] == oldIndex) {
+            if (documentSnapshot['index'] == oldIndex && field == true) {
               databaseReference
                   .collection("Tasks")
                   .doc(_email)
@@ -257,29 +260,30 @@ class _MainActivityState extends State<MainDashboard> {
                   .update({'index': documentSnapshot['index'] + 1});
           }
         }
+      }).catchError((err) {
+        print('$err');
       });
     }
   }
 
-  void _showOnDoubleTap(BuildContext context, DocumentSnapshot e){
+  void _showOnDoubleTap(
+      BuildContext context, DocumentSnapshot e, AsyncSnapshot snapshot) {
+    int ind = e['index'];
     Widget deletebutton = FlatButton(
-      child: Text(
-        "Delete",
-        style: TextStyle(
-          color: Colors.white,
+        child: Text(
+          "Delete",
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
-      ),
-       onPressed: () => FirebaseFirestore
-        .instance
-        .runTransaction(
-          (transaction) async {
+        onPressed: () {
+          FirebaseFirestore.instance.runTransaction((transaction) async {
             transaction.delete(e.reference);
-            Fluttertoast.showToast(
-              msg: "Task has been deleted!"
-            );
-          }
-        ),
-    );
+            Fluttertoast.showToast(msg: "Task has been deleted!");
+            Navigator.of(context, rootNavigator: true).pop();
+          }).then((value) =>
+              updateData(ind, snapshot.data.documents.length - 1, false));
+        });
     Widget cancelbutton = FlatButton(
       child: Text(
         "Cancel",
@@ -312,7 +316,7 @@ class _MainActivityState extends State<MainDashboard> {
     );
   }
 }
- /*content: Column(
+/*content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
