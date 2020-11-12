@@ -39,10 +39,35 @@ class _MainActivityState extends State<MainDashboard> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          toolbarHeight: 80.0,
+          backgroundColor: Colors.teal,
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            color: Colors.white,
+            iconSize: 35.0,
+            onPressed: () {},
+          ),
+          title: Text(
+            "Your Tasks",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 35.0
+            ),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              iconSize: 35.0,
+              onPressed: () {},
+            )
+          ],
+        ),
         backgroundColor: Colors.white12,
         body: Column(
           children: [
-            Padding(
+           /* Padding(
               padding: const EdgeInsets.only(top: 40, bottom: 10),
               child: Text(
                 "Your Tasks ",
@@ -51,10 +76,10 @@ class _MainActivityState extends State<MainDashboard> {
                     fontWeight: FontWeight.bold,
                     color: Colors.teal),
               ),
-            ),
-            Container(
+            ),*/
+            /*Container(
                 margin: const EdgeInsets.only(left: 30, right: 30),
-                child: Divider(color: Colors.grey, thickness: 1)),
+                child: Divider(color: Colors.grey, thickness: 1)),*/
             Expanded(
               child: SizedBox(
                 height: 400.0,
@@ -202,12 +227,24 @@ class _MainActivityState extends State<MainDashboard> {
             title: Text(
               documentSnapshot['Title'],
               textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30.0,
+              ),
             ),
             content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text(documentSnapshot['description']),
+                Text(
+                  documentSnapshot['description'],
+                  style: TextStyle(
+                    fontSize: 22.0, 
+                  ),
+                ),
+                Divider(
+                  color: Colors.black,
+                  thickness: 3.0,
+                ),
                 Text(documentSnapshot['date']),
                 Text(documentSnapshot['time']),
               ],
