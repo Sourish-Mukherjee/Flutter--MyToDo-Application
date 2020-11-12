@@ -9,6 +9,8 @@ class DashBoardDateTime extends StatefulWidget {
 }
 
 class _DashBoardDateTimeState extends State<DashBoardDateTime> {
+  DateTime d;
+  TimeOfDay selectedTime;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,31 +22,19 @@ class _DashBoardDateTimeState extends State<DashBoardDateTime> {
             onPressed: () {
               _selectDate(context);
             },
-            child: Text("Date",
-                style: TextStyle(fontSize: 15, color: Colors.white)),
+            child: Text("Date - Time",
+                style: TextStyle(fontSize: 18, color: Colors.white)),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
                 side: BorderSide(color: Colors.teal)),
           ),
-          FlatButton(
-            onPressed: () {
-              _selectTime(context);
-            },
-            child: Text(
-              "Time",
-              style: TextStyle(fontSize: 15, color: Colors.white),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-                side: BorderSide(color: Colors.teal)),
-          )
         ],
       ),
     );
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime d = await showDatePicker(
+    d = await showDatePicker(
       builder: (context, child) {
         return Theme(
           data: ThemeData(
@@ -58,30 +48,30 @@ class _DashBoardDateTimeState extends State<DashBoardDateTime> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2015),
       lastDate: DateTime(2050),
-    );
+    ).whenComplete(() async {
+      selectedTime = await showTimePicker(
+        builder: (context, child) {
+          return Theme(
+            data: ThemeData(
+                primarySwatch: Colors.teal,
+                splashColor: Colors.green,
+                brightness: Brightness.dark),
+            child: child,
+          );
+        },
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+    });
     if (d != null) {
       var date = DateTime.parse(d.toString());
       String formattedDate = "${date.day}-${date.month}-${date.year}";
-      widget?.function(widget?.state, date: formattedDate);
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay selectedTime = await showTimePicker(
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData(
-              primarySwatch: Colors.teal,
-              splashColor: Colors.green,
-              brightness: Brightness.dark),
-          child: child,
-        );
-      },
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (selectedTime != null) {
-      widget?.function(widget?.state, time: selectedTime.format(context));
+      widget?.function(
+          widget?.state,
+          formattedDate,
+          selectedTime.format(context),
+          DateTime(
+              d.year, d.month, d.day, selectedTime.hour, selectedTime.minute));
     }
   }
 }

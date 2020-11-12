@@ -1,6 +1,9 @@
+import 'dart:collection';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mytodoapp/Screens/toDoScreen/backend/tasklist.dart';
+import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/viewHolder.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_custom_textfield.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_dateandtime_.dart';
@@ -15,11 +18,22 @@ class MainDashboard extends StatefulWidget {
 
 class _MainActivityState extends State<MainDashboard> {
   final String _email;
-  int _index = 0;
+  int _index;
   List<DocumentSnapshot> _docs;
-  TaskList taskList = new TaskList();
   String chosenDate = "", chosenTime = "", title = "", desc = "";
+  DateTime chosenDateTime;
+  NotificationManager notificationManager;
+  Set<int> set;
+
   _MainActivityState(this._email);
+
+  @override
+  initState() {
+    super.initState();
+    notificationManager = NotificationManager();
+    _index = 0;
+    set = HashSet();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +69,9 @@ class _MainActivityState extends State<MainDashboard> {
                       _docs = snapshot.data.documents;
                       _index = _docs.length;
                       _docs.sort((a, b) => a['index'].compareTo(b['index']));
+                      _docs.forEach((element) {
+                        set.add(element['notificationID']);
+                      });
                       return Theme(
                         data: ThemeData(canvasColor: Colors.transparent),
                         child: ReorderableListView(
@@ -120,6 +137,7 @@ class _MainActivityState extends State<MainDashboard> {
                             DashboardCustomTextField.getDesc().text,
                             chosenDate,
                             chosenTime);
+                        Navigator.of(context, rootNavigator: true).pop();
                       },
                       color: Colors.teal,
                       child: Icon(Icons.save, size: 50, color: Colors.white),
@@ -132,10 +150,12 @@ class _MainActivityState extends State<MainDashboard> {
         });
   }
 
-  void updated(StateSetter updateState, {String date, String time}) {
+  void updated(
+      StateSetter updateState, String date, String time, DateTime dateTime) {
     updateState(() {
-      if (date != null) this.chosenDate = date;
-      if (time != null) this.chosenTime = time;
+      this.chosenDate = date;
+      this.chosenTime = time;
+      this.chosenDateTime = dateTime;
     });
   }
 
@@ -146,6 +166,7 @@ class _MainActivityState extends State<MainDashboard> {
   void createRecord(String _title, String _desc, String _chosenDate,
       String _chosenTime) async {
     final databaseReference = FirebaseFirestore.instance;
+    int notificationID = giveRandomNumber();
     await databaseReference
         .collection("Tasks")
         .doc(_email)
@@ -156,8 +177,10 @@ class _MainActivityState extends State<MainDashboard> {
       'description': _desc,
       'date': _chosenDate,
       'time': _chosenTime,
+      'notificationID': notificationID,
       'index': _index++
-    });
+    }).whenComplete(() => notificationManager.showNotificationDaily(
+            notificationID, _title, _desc, chosenDateTime));
   }
 
   void _popupDialog(BuildContext context, DocumentSnapshot documentSnapshot) {
@@ -283,6 +306,7 @@ class _MainActivityState extends State<MainDashboard> {
             Navigator.of(context, rootNavigator: true).pop();
           }).then((value) =>
               updateData(ind, snapshot.data.documents.length - 1, false));
+          notificationManager.removeReminder(e['notificationID']);
         });
     Widget cancelbutton = FlatButton(
       child: Text(
@@ -315,17 +339,10 @@ class _MainActivityState extends State<MainDashboard> {
       },
     );
   }
+
+  int giveRandomNumber() {
+    int x = Random().nextInt(999999999);
+    if (set.contains(x)) giveRandomNumber();
+    return x;
+  }
 }
-/*content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                e['description'],
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontStyle: bold
-                ),
-              ),
-            ],
-          ),*/
