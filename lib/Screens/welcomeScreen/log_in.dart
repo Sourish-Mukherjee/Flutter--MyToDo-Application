@@ -154,8 +154,13 @@ class LoginPageState extends State<LogIn> {
                           ),
                           _googleSignInButton(),
                         ],
-                      )),
-                    )))));
+                      )
+                    ),
+                  )
+                )
+              )
+            )
+          );
   }
 
   Widget _googleSignInButton() {

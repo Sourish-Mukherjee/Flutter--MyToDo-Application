@@ -62,14 +62,7 @@ class _MainActivityState extends State<MainDashboard> {
                                 .map((e) => InkWell(
                                     key: ObjectKey(e),
                                     onTap: () => _popupDialog(context, e),
-                                    onDoubleTap: () => FirebaseFirestore
-                                            .instance
-                                            .runTransaction(
-                                                (transaction) async {
-                                          transaction.delete(e.reference);
-                                          Fluttertoast.showToast(
-                                              msg: "Task has been deleted!");
-                                        }),
+                                    onDoubleTap: () => _showOnDoubleTap(context, e),
                                     child: ViewHolder(e)))
                                 .toList(),
                             onReorder: onReorder),
@@ -168,14 +161,24 @@ class _MainActivityState extends State<MainDashboard> {
 
   void _popupDialog(BuildContext context, DocumentSnapshot documentSnapshot) {
     Widget okButton = FlatButton(
-      child: Text("OK"),
+      child: Text(
+        "OK",
+        style: TextStyle(color: Colors.white),
+      ),
       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
     );
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(documentSnapshot['Title']),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            backgroundColor: Colors.teal,
+            title: Text(
+              documentSnapshot['Title'],
+              textAlign: TextAlign.center,
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -257,4 +260,68 @@ class _MainActivityState extends State<MainDashboard> {
       });
     }
   }
+
+  void _showOnDoubleTap(BuildContext context, DocumentSnapshot e){
+    Widget deletebutton = FlatButton(
+      child: Text(
+        "Delete",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+       onPressed: () => FirebaseFirestore
+        .instance
+        .runTransaction(
+          (transaction) async {
+            transaction.delete(e.reference);
+            Fluttertoast.showToast(
+              msg: "Task has been deleted!"
+            );
+          }
+        ),
+    );
+    Widget cancelbutton = FlatButton(
+      child: Text(
+        "Cancel",
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+    );
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          backgroundColor: Colors.teal,
+          title: Text(
+            "Are you sure you want to delete?",
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+          ),
+          actions: [
+            cancelbutton,
+            deletebutton,
+          ],
+        );
+      },
+    );
+  }
 }
+ /*content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                e['description'],
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontStyle: bold
+                ),
+              ),
+            ],
+          ),*/
