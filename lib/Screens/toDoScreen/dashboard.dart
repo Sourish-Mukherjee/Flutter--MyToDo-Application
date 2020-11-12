@@ -213,12 +213,9 @@ class _MainActivityState extends State<MainDashboard> {
           .get()
           .then((QuerySnapshot snapshot) {
         for (DocumentSnapshot documentSnapshot in snapshot.docs) {
-          String x = documentSnapshot['Title'];
-          print("Tite is : '$x");
           if (documentSnapshot['index'] >= oldIndex &&
               documentSnapshot['index'] <= newIndex) {
             if (documentSnapshot['index'] == oldIndex && field == true) {
-              print("YES YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
               databaseReference
                   .collection("Tasks")
                   .doc(_email)
@@ -254,7 +251,6 @@ class _MainActivityState extends State<MainDashboard> {
                   .collection("User_Tasks_List")
                   .doc(documentSnapshot['Title'])
                   .update({'index': newIndex});
-              print("YES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             } else
               databaseReference
                   .collection("Tasks")
