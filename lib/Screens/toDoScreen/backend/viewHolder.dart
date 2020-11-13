@@ -3,19 +3,40 @@ import 'package:flutter/material.dart';
 
 class ViewHolder extends StatelessWidget {
   final DocumentSnapshot documentSnapshot;
+  final Map<String, Color> _iconColorMap = {
+    "education.png": Colors.yellow,
+    "sports.png": Colors.white,
+    "transport.png": Colors.blue,
+    "medicine.png": Colors.red,
+    "payment.png": Colors.yellow[900],
+    "shopping.png": Colors.green,
+    "message.png": Colors.cyan,
+    "office.png": Colors.pink
+  };
   ViewHolder(this.documentSnapshot);
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
-      padding: EdgeInsets.only(left: 30, top: 20, bottom: 20),
+      padding: EdgeInsets.only(left: 10, top: 20, bottom: 20),
       decoration: BoxDecoration(
-        color: Colors.white12,
-        borderRadius: BorderRadius.circular(10),
-      ),
+          color: Colors.grey[850],
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: _iconColorMap[documentSnapshot['icon']],
+              blurRadius: 3, // changes position of shadow
+            ),
+          ]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: Image.asset(
+                'assests/Images/' + documentSnapshot['icon'],
+                color: _iconColorMap[documentSnapshot['icon']],
+              )),
           Text(
             documentSnapshot['Title'],
             textAlign: TextAlign.left,
