@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mytodoapp/Screens/toDoScreen/backend/iconColor.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/viewHolder.dart';
-import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_custom_textfield.dart';
-import 'package:mytodoapp/Screens/toDoScreen/frontend/components/dashboard_dateandtime_.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/dashboard_custom_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/dashboard_dateandtime_.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/viewHolderForIcons.dart';
 
 class MainDashboard extends StatefulWidget {
   final String _email;
@@ -18,13 +20,13 @@ class MainDashboard extends StatefulWidget {
 
 class _MainActivityState extends State<MainDashboard> {
   final String _email;
-  int _index;
   List<DocumentSnapshot> _docs;
   String chosenDate = "", chosenTime = "", title = "", desc = "";
+  IconColor _chosenIconColor;
   DateTime chosenDateTime;
   NotificationManager notificationManager;
   Set<int> set;
-
+  int _index = 0;
   _MainActivityState(this._email);
 
   @override
@@ -155,6 +157,15 @@ class _MainActivityState extends State<MainDashboard> {
                       trailing: Icon(Icons.timer, color: Colors.teal),
                     ),
                     DashboardCustomTextField(),
+                    Container(
+                      width: double.infinity,
+                      height: 80,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 8,
+                          itemBuilder: (context, index) =>
+                              ViewHolderForIcons(index, selectedIcon)),
+                    ),
                     DashBoardDateTime(updated, mystate),
                     SizedBox(height: 10),
                     MaterialButton(
@@ -186,6 +197,10 @@ class _MainActivityState extends State<MainDashboard> {
     });
   }
 
+  void selectedIcon(IconColor chosenIconColor) {
+    this._chosenIconColor = chosenIconColor;
+  }
+
   void setTitleForTask(String title) => this.title = title;
 
   void setDescriptionForTask(String desc) => this.desc = desc;
@@ -206,6 +221,7 @@ class _MainActivityState extends State<MainDashboard> {
       'time': _chosenTime,
       'notificationID': notificationID,
       'DateTimeStamp': chosenDateTime,
+      'icon': _chosenIconColor.getIcon(),
       'index': _index++
     }).whenComplete(() => notificationManager.showNotificationDaily(
             notificationID, _title, _desc, chosenDateTime));
