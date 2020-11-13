@@ -51,10 +51,7 @@ class _MainActivityState extends State<MainDashboard> {
           ),
           title: Text(
             "Your Tasks",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 35.0
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 35.0),
           ),
           actions: <Widget>[
             IconButton(
@@ -67,19 +64,6 @@ class _MainActivityState extends State<MainDashboard> {
         backgroundColor: Colors.white12,
         body: Column(
           children: [
-           /* Padding(
-              padding: const EdgeInsets.only(top: 40, bottom: 10),
-              child: Text(
-                "Your Tasks ",
-                style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.teal),
-              ),
-            ),*/
-            /*Container(
-                margin: const EdgeInsets.only(left: 30, right: 30),
-                child: Divider(color: Colors.grey, thickness: 1)),*/
             Expanded(
               child: SizedBox(
                 height: 400.0,
@@ -96,6 +80,24 @@ class _MainActivityState extends State<MainDashboard> {
                       _docs.sort((a, b) => a['index'].compareTo(b['index']));
                       _docs.forEach((element) {
                         set.add(element['notificationID']);
+                        notificationManager
+                            .getPendingNotifications()
+                            .then((value) {
+                          if (!value.contains(element['notificationID'])) {
+                            Timestamp timestamp = element['DateTimeStamp'];
+                            if (timestamp
+                                    .toDate()
+                                    .difference(DateTime.now())
+                                    .inSeconds >=
+                                0) {
+                              notificationManager.showNotificationDaily(
+                                  element['notificationID'],
+                                  element['Title'],
+                                  element['description'],
+                                  timestamp.toDate());
+                            }
+                          }
+                        });
                       });
                       return Theme(
                         data: ThemeData(canvasColor: Colors.transparent),
@@ -203,6 +205,7 @@ class _MainActivityState extends State<MainDashboard> {
       'date': _chosenDate,
       'time': _chosenTime,
       'notificationID': notificationID,
+      'DateTimeStamp': chosenDateTime,
       'index': _index++
     }).whenComplete(() => notificationManager.showNotificationDaily(
             notificationID, _title, _desc, chosenDateTime));
@@ -238,7 +241,7 @@ class _MainActivityState extends State<MainDashboard> {
                 Text(
                   documentSnapshot['description'],
                   style: TextStyle(
-                    fontSize: 22.0, 
+                    fontSize: 22.0,
                   ),
                 ),
                 Divider(
