@@ -71,10 +71,17 @@ class NotificationManager {
 
   Future onDidReceiveLocalNotification(
       int id, String title, String body, String payload) async {
+    removeReminder(id);
     return Future.value(1);
   }
 
   void removeReminder(int notificationId) {
     flutterLocalNotificationsPlugin.cancel(notificationId);
+  }
+
+  Future<List<PendingNotificationRequest>> getPendingNotifications() async {
+    final List<PendingNotificationRequest> pendingNotificationRequests =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    return pendingNotificationRequests;
   }
 }
