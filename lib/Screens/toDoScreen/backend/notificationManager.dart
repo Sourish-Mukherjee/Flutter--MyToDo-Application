@@ -72,7 +72,6 @@ class NotificationManager {
   Future onDidReceiveLocalNotification(
       int id, String title, String body, String payload) async {
     removeReminder(id);
-    return Future.value(1);
   }
 
   void removeReminder(int notificationId) {

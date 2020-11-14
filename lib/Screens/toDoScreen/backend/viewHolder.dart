@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class ViewHolder extends StatelessWidget {
   final DocumentSnapshot documentSnapshot;
+  final bool _field;
   final Map<String, Color> _iconColorMap = {
     "education.png": Colors.yellow,
     "sports.png": Colors.white,
@@ -13,9 +14,20 @@ class ViewHolder extends StatelessWidget {
     "message.png": Colors.cyan,
     "office.png": Colors.pink
   };
-  ViewHolder(this.documentSnapshot);
+  ViewHolder(this.documentSnapshot, this._field);
   @override
   Widget build(BuildContext context) {
+    Timestamp timestamp = documentSnapshot['DateTimeStamp'];
+    if (_field && DateTime.now().difference(timestamp.toDate()).inSeconds < 0) {
+      return _getContainer();
+    } else if (!_field &&
+        DateTime.now().difference(timestamp.toDate()).inSeconds > 0) {
+      return _getContainer();
+    }
+    return Container();
+  }
+
+  Widget _getContainer() {
     return Container(
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.only(left: 10, top: 20, bottom: 20),
