@@ -25,6 +25,7 @@ class _DashboardCustomTextFieldState extends State<DashboardCustomTextField> {
       child: Column(
         children: [
           Container(
+            constraints: BoxConstraints(minHeight: 15),
             child: TextField(
               controller: textEditingControllerTitle,
               maxLines: 1,
