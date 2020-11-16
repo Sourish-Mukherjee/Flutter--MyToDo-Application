@@ -51,21 +51,34 @@ class _MainActivityState extends State<MainDashboard> {
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          toolbarHeight: 80.0,
-          backgroundColor: Colors.teal,
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            color: Colors.white,
-            iconSize: 35.0,
-            onPressed: () {},
-          ),
-          title: Text(
-            "Your Tasks",
-            style: TextStyle(color: Colors.white, fontSize: 35.0),
+          toolbarHeight: 90.0,
+          backgroundColor: Colors.black,
+          title: Container(
+            child: Column(
+              children: [
+                Text(
+                  "My To-Do App",
+                  style: GoogleFonts.dancingScript(
+                      fontSize: 35,
+                      color: Colors.teal,
+                      fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 5),
+                  child: Divider(
+                    color: Colors.white,
+                    thickness: 1,
+                  ),
+                )
+              ],
+            ),
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.search),
+              icon: Icon(
+                Icons.power_settings_new,
+                color: Colors.teal,
+              ),
               iconSize: 35.0,
               onPressed: () {},
             )
