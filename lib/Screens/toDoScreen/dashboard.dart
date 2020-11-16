@@ -1,7 +1,5 @@
-import 'dart:collection';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/iconColor.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/makeChanges.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
@@ -24,6 +22,7 @@ class MainDashboard extends StatefulWidget {
 }
 
 class _MainActivityState extends State<MainDashboard> {
+  bool field = true;
   String _email;
   String chosenDate = "", chosenTime = "", title = "", desc = "";
   IconColor _chosenIconColor;
@@ -74,15 +73,17 @@ class _MainActivityState extends State<MainDashboard> {
         ),
         backgroundColor: Colors.black,
         body: bottomTabs[_bottomNavIndex],
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.edit,
-            color: Colors.white,
-          ),
-          onPressed: onButtonPressed,
-          backgroundColor: Colors.teal,
-          foregroundColor: Colors.black,
-        ),
+        floatingActionButton: field
+            ? FloatingActionButton(
+                child: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onPressed: onButtonPressed,
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.black,
+              )
+            : Center(),
         bottomNavigationBar: Theme(
           data: ThemeData(canvasColor: Colors.transparent),
           child: BottomNavigationBar(
@@ -110,6 +111,11 @@ class _MainActivityState extends State<MainDashboard> {
             onTap: (value) {
               setState(() {
                 _bottomNavIndex = value;
+                if (value == 1) {
+                  field = false;
+                } else {
+                  field = true;
+                }
               });
             },
           ),
@@ -139,13 +145,36 @@ class _MainActivityState extends State<MainDashboard> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ListTile(
-                      leading: Icon(Icons.calendar_today, color: Colors.teal),
-                      title: Text(
-                        chosenDate + '           ' + chosenTime ?? '',
-                        style: TextStyle(color: Colors.white),
+                    Container(
+                      margin: const EdgeInsets.only(
+                          bottom: 15, left: 15, right: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                              margin: const EdgeInsets.only(right: 15),
+                              constraints: BoxConstraints(maxHeight: 20),
+                              child: Icon(
+                                Icons.date_range,
+                                color: Colors.teal,
+                              )),
+                          Text(chosenDate,
+                              style: GoogleFonts.ubuntu(
+                                  textStyle: TextStyle(
+                                      fontSize: 20, color: Colors.white))),
+                          Text(chosenTime,
+                              style: GoogleFonts.ubuntu(
+                                  textStyle: TextStyle(
+                                      fontSize: 20, color: Colors.white))),
+                          Container(
+                              margin: const EdgeInsets.only(right: 15),
+                              constraints: BoxConstraints(maxHeight: 20),
+                              child: Icon(
+                                Icons.alarm,
+                                color: Colors.teal,
+                              ))
+                        ],
                       ),
-                      trailing: Icon(Icons.timer, color: Colors.teal),
                     ),
                     DashboardCustomTextField(),
                     Container(
@@ -174,6 +203,14 @@ class _MainActivityState extends State<MainDashboard> {
                                 _chosenIconColor,
                                 ToDoScreenWidget.getIndex());
                         Navigator.of(context, rootNavigator: true).pop();
+                        DashboardCustomTextField.getTitle().clear();
+                        DashboardCustomTextField.getDesc().clear();
+                        setState(() {
+                          chosenTime = "";
+                          chosenDate = "";
+                          chosenDateTime = null;
+                          _chosenIconColor = null;
+                        });
                       },
                       color: Colors.teal,
                       child: Icon(Icons.save, size: 50, color: Colors.white),

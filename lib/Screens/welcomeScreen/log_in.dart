@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mytodoapp/Screens/toDoScreen/dashboard.dart';
@@ -14,6 +15,7 @@ class LogIn extends StatefulWidget {
 class LoginPageState extends State<LogIn> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,144 +25,161 @@ class LoginPageState extends State<LogIn> {
                 body: Form(
                     key: _formKey,
                     child: Center(
-                      child: SingleChildScrollView(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomWelcomeImage(
-                              'assests/Images/login_screen_logo.png', 110),
-                          Container(
-                              width: 300,
-                              child: TextFormField(
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Can't be Empty!";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (newValue) => _email = newValue,
-                                obscureText: false,
-                                style: TextStyle(color: Colors.white),
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                    labelText: 'Email-ID',
-                                    labelStyle: TextStyle(color: Colors.teal),
-                                    prefixIcon: Icon(
-                                      Icons.email,
-                                      color: Colors.white,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.white, width: 1),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.white, width: 1),
+                      child: isLoading
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.grey,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.teal),
+                                strokeWidth: 5,
+                              ),
+                            )
+                          : SingleChildScrollView(
+                              child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomWelcomeImage(
+                                    'assests/Images/login_screen_logo.png',
+                                    110),
+                                Container(
+                                    width: 300,
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return "Can't be Empty!";
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (newValue) => _email = newValue,
+                                      obscureText: false,
+                                      style: TextStyle(color: Colors.white),
+                                      keyboardType: TextInputType.emailAddress,
+                                      decoration: InputDecoration(
+                                          labelText: 'Email-ID',
+                                          labelStyle:
+                                              TextStyle(color: Colors.teal),
+                                          prefixIcon: Icon(
+                                            Icons.email,
+                                            color: Colors.white,
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.white, width: 1),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.white, width: 1),
+                                          )),
                                     )),
-                              )),
-                          SizedBox(height: 15),
-                          Container(
-                              width: 300,
-                              child: TextFormField(
-                                obscureText: true,
-                                onSaved: (input) => _password = input,
-                                style: TextStyle(color: Colors.white),
-                                keyboardType: TextInputType.visiblePassword,
-                                decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    labelStyle: TextStyle(color: Colors.teal),
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      color: Colors.white,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.white, width: 1),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.white, width: 1),
+                                SizedBox(height: 15),
+                                Container(
+                                    width: 300,
+                                    child: TextFormField(
+                                      obscureText: true,
+                                      onSaved: (input) => _password = input,
+                                      style: TextStyle(color: Colors.white),
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
+                                      decoration: InputDecoration(
+                                          labelText: 'Password',
+                                          labelStyle:
+                                              TextStyle(color: Colors.teal),
+                                          prefixIcon: Icon(
+                                            Icons.lock,
+                                            color: Colors.white,
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.white, width: 1),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide(
+                                                color: Colors.white, width: 1),
+                                          )),
                                     )),
-                              )),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: GestureDetector(
-                                child: Text(
-                                  "Forgot Password ?",
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Colors.teal,
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  child: GestureDetector(
+                                      child: Text(
+                                        "Forgot Password ?",
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.teal,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        FirebaseAuth.instance
+                                            .sendPasswordResetEmail(
+                                                email: _email);
+                                        Fluttertoast.showToast(
+                                            msg:
+                                                'Email has been sent with password reset option!');
+                                      }),
+                                ),
+                                SizedBox(height: 25),
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: Colors.teal,
+                                              width: 2,
+                                              style: BorderStyle.solid,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        onPressed: signInFireBase,
+                                        child: Text('Sign-In',
+                                            style:
+                                                TextStyle(color: Colors.teal)),
+                                      ),
+                                      SizedBox(width: 20),
+                                    ],
                                   ),
                                 ),
-                                onTap: () {
-                                  FirebaseAuth.instance
-                                      .sendPasswordResetEmail(email: _email);
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          'Email has been sent with password reset option!');
-                                }),
-                          ),
-                          SizedBox(height: 25),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                FlatButton(
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                        color: Colors.teal,
-                                        width: 2,
-                                        style: BorderStyle.solid,
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                              color: Colors.teal,
+                                              width: 2,
+                                              style: BorderStyle.solid,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterScreen()),
+                                          );
+                                        },
+                                        child: Text('Create Account',
+                                            style:
+                                                TextStyle(color: Colors.teal)),
                                       ),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  onPressed: signInFireBase,
-                                  child: Text('Sign-In',
-                                      style: TextStyle(color: Colors.teal)),
+                                      SizedBox(width: 20),
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(width: 20),
+                                _googleSignInButton(),
                               ],
-                            ),
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                FlatButton(
-                                  shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                        color: Colors.teal,
-                                        width: 2,
-                                        style: BorderStyle.solid,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              RegisterScreen()),
-                                    );
-                                  },
-                                  child: Text('Create Account',
-                                      style: TextStyle(color: Colors.teal)),
-                                ),
-                                SizedBox(width: 20),
-                              ],
-                            ),
-                          ),
-                          _googleSignInButton(),
-                        ],
-                      )
-                    ),
-                  )
-                )
-              )
-            )
-          );
+                            )),
+                    )))));
   }
 
   Widget _googleSignInButton() {
@@ -200,17 +219,35 @@ class LoginPageState extends State<LogIn> {
     if (formState.validate()) {
       formState.save();
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: _email.trim(), password: _password.trim());
-        if (FirebaseAuth.instance.currentUser.emailVerified) {
-          Fluttertoast.showToast(msg: "Signed In");
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MainDashboard(_email)));
-        }
-        Fluttertoast.showToast(msg: 'Email Is Not Verified!');
+        setState(() {
+          isLoading = true;
+        });
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password)
+            .then((value) {
+          if (FirebaseAuth.instance.currentUser.emailVerified) {
+            Fluttertoast.showToast(msg: "Signed In");
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => MainDashboard(_email)));
+            Future.delayed(Duration(seconds: 1)).whenComplete(() {
+              setState(() {
+                isLoading = false;
+              });
+            });
+          } else {
+            Fluttertoast.showToast(msg: "Please Verify Your Email");
+          }
+        }).catchError(
+                (onError) => Fluttertoast.showToast(msg: onError.toString()));
       } catch (e) {
-        Fluttertoast.showToast(msg: e.message);
+        //This is for Debugging purpose only.
+        //print(e.toString());
       }
+      Future.delayed(Duration(seconds: 1)).whenComplete(() {
+        setState(() {
+          isLoading = false;
+        });
+      });
     }
   }
 }
