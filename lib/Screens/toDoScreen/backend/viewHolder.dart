@@ -51,6 +51,7 @@ class ViewHolder extends StatelessWidget {
               )),
           Text(
             documentSnapshot['Title'],
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,

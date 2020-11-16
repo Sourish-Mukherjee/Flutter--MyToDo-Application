@@ -3,53 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/makeChanges.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/getDialogforInfo.dart';
 
 class ShowInformation {
   void popupDialog(BuildContext context, DocumentSnapshot documentSnapshot) {
-    Widget okButton = FlatButton(
-      child: Text(
-        "OK",
-        style: TextStyle(color: Colors.white),
-      ),
-      onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-    );
     showDialog(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            backgroundColor: Colors.teal,
-            title: Text(
-              documentSnapshot['Title'],
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30.0,
-              ),
-            ),
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  documentSnapshot['description'],
-                  style: TextStyle(
-                    fontSize: 22.0,
-                  ),
-                ),
-                Divider(
-                  color: Colors.black,
-                  thickness: 3.0,
-                ),
-                Text(documentSnapshot['date']),
-                Text(documentSnapshot['time']),
-              ],
-            ),
-            actions: [
-              okButton,
-            ],
-          );
+        builder: (BuildContext context) {
+          return InfoDialog().getInfoDialog(documentSnapshot, context);
         });
   }
 
