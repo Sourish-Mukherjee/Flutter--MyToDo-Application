@@ -1,14 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mytodoapp/Screens/toDoScreen/frontend/showInformation.dart';
-import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
 
 class ViewHolder extends StatelessWidget {
   final DocumentSnapshot documentSnapshot;
   final bool _field;
-  final String _email;
-  final AsyncSnapshot snapshot;
-  final NotificationManager _notificationManager;
   final Map<String, Color> _iconColorMap = {
     "education.png": Colors.yellow,
     "sports.png": Colors.white,
@@ -19,7 +14,7 @@ class ViewHolder extends StatelessWidget {
     "message.png": Colors.cyan,
     "office.png": Colors.pink
   };
-  ViewHolder(this.documentSnapshot, this._field, this._email,this.snapshot,this._notificationManager);
+  ViewHolder(this.documentSnapshot, this._field);
   @override
   Widget build(BuildContext context) {
     Timestamp timestamp = documentSnapshot['DateTimeStamp'];
@@ -54,46 +49,49 @@ class ViewHolder extends StatelessWidget {
                 'assests/Images/' + documentSnapshot['icon'],
                 color: _iconColorMap[documentSnapshot['icon']],
               )),
-          Expanded(
-            child: Text(
-              documentSnapshot['Title'],
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 30,
-              ),
+          Text(
+            documentSnapshot['Title'],
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
             ),
           ),
+          Expanded(child: Divider()),
           Theme(
             data: ThemeData(
               cardColor: Colors.black,
             ),
+            child: Padding(
+              padding: EdgeInsets.only(right: 12.0),
               child: PopupMenuButton(
                 itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                   PopupMenuItem(
                       child: Text(
-                    "Share",
+                    "Edit",
                     style: TextStyle(color: Colors.white),
                   )),
                   PopupMenuItem(
-                      child: TextButton(
-                        onPressed: () => ShowInformation()
-                                    .showOnDoubleTap(
-                                        this._email, context, this.documentSnapshot, snapshot,
-                                        notificationManager:
-                                            _notificationManager),
-                    child: Text("Delete",
-                    style: TextStyle(color: Colors.white),)
+                      child: Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.white),
                   ))
                 ],
-                offset: Offset(0,100),
                 icon: Icon(
                   Icons.more_vert,
                   color: Colors.white,
                 ),
               ),
             ),
+          ),
+          Container(
+              margin: const EdgeInsets.only(right: 15),
+              constraints: BoxConstraints(maxHeight: 20),
+              child: Image.asset(
+                'assests/Images/drag_icon.png',
+                fit: BoxFit.cover,
+                color: Colors.teal,
+              ))
         ],
       ),
     );
