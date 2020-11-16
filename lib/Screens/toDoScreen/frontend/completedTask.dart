@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/makeChanges.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
-import 'package:mytodoapp/Screens/toDoScreen/backend/viewHolder.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/showInformation.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/viewHolder.dart';
 
 class CompletedTask {
   String email = "";
@@ -14,11 +14,9 @@ class CompletedTask {
   final Set<DocumentSnapshot> checkExists = HashSet();
   DateTime chosenDateTime;
   NotificationManager notificationManager;
-  static int _index;
   CompletedTask(String email, NotificationManager notificationManager) {
     this.email = email;
     this.notificationManager = notificationManager;
-    _index = 0;
   }
   Widget getCompletedColumn() {
     return Column(
@@ -35,7 +33,6 @@ class CompletedTask {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) return const Text("Loading!...");
                   _docs = snapshot.data.documents;
-                  _index = _docs.length;
                   _docs.sort((a, b) => a['index'].compareTo(b['index']));
                   _docs.forEach((element) {
                     notificationManager.getPendingNotifications().then((value) {

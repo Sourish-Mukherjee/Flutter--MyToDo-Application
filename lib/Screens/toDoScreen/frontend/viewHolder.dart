@@ -49,23 +49,43 @@ class ViewHolder extends StatelessWidget {
                 'assests/Images/' + documentSnapshot['icon'],
                 color: _iconColorMap[documentSnapshot['icon']],
               )),
-          Text(
-            documentSnapshot['Title'],
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
+          Expanded(
+            child: Text(
+              documentSnapshot['Title'],
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+              ),
             ),
           ),
-          Expanded(child: Divider()),
-          Container(
-              margin: const EdgeInsets.only(right: 15),
-              constraints: BoxConstraints(maxHeight: 20),
-              child: Image.asset(
-                'assests/Images/drag_icon.png',
-                fit: BoxFit.cover,
-                color: Colors.teal,
-              ))
+          Theme(
+            data: ThemeData(
+              cardColor: Colors.black,
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(right: 12.0),
+              child: PopupMenuButton(
+                itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                  PopupMenuItem(
+                      child: Text(
+                    "Share",
+                    style: TextStyle(color: Colors.white),
+                  )),
+                  PopupMenuItem(
+                      child: Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.white),
+                  ))
+                ],
+                icon: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

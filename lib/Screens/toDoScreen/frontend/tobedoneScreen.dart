@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/makeChanges.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
-import 'package:mytodoapp/Screens/toDoScreen/backend/viewHolder.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/showInformation.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/viewHolder.dart';
 
 class ToDoScreenWidget {
   String email = "somu18cs@cmrit.ac.in";
