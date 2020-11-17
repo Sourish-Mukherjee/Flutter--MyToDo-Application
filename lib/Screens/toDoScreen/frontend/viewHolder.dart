@@ -24,15 +24,15 @@ class ViewHolder extends StatelessWidget {
   Widget build(BuildContext context) {
     Timestamp timestamp = documentSnapshot['DateTimeStamp'];
     if (_field && DateTime.now().difference(timestamp.toDate()).inSeconds < 0) {
-      return _getContainer();
+      return _getContainer(context);
     } else if (!_field &&
         DateTime.now().difference(timestamp.toDate()).inSeconds > 0) {
-      return _getContainer();
+      return _getContainer(context);
     }
     return Container();
   }
 
-  Widget _getContainer() {
+  Widget _getContainer(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.only(left: 10, top: 20, bottom: 20),
@@ -65,7 +65,19 @@ class ViewHolder extends StatelessWidget {
               ),
             ),
           ),
-          Theme(
+          IconButton(
+            icon: Icon(
+              Icons.delete,
+              color: Colors.teal,
+              size: 35.0,
+            ),
+            onPressed: () => ShowInformation()
+                                    .showOnDoubleTap(
+                                        this._email, context, this.documentSnapshot, snapshot,
+                                        notificationManager:
+                                            _notificationManager),
+          ),
+          /*Theme(
             data: ThemeData(
               cardColor: Colors.black,
             ),
@@ -93,7 +105,7 @@ class ViewHolder extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-            ),
+            ),*/
         ],
       ),
     );
