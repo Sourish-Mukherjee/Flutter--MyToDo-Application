@@ -5,11 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp().then((value) {
-    runApp(MaterialApp(
-      home: LogIn(),
-    ));
-  });
+  Firebase.initializeApp();
+  runApp(MaterialApp(
+    home: LogIn(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

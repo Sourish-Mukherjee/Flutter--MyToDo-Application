@@ -18,7 +18,7 @@ class ViewHolderForIcons extends StatelessWidget {
   ViewHolderForIcons(this._index, this.function);
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return InkResponse(
       splashColor: Colors.tealAccent,
       onTap: () {
         function(_iconColor[_index]);

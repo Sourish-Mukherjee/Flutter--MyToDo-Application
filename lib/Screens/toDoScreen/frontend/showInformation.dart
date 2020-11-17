@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/makeChanges.dart';
@@ -84,7 +83,7 @@ class ShowInformation {
         child: Text(
           "Sign-Out",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.teal,
           ),
         ),
         onPressed: () {
@@ -113,7 +112,7 @@ class ShowInformation {
       child: Text(
         "Cancel",
         style: TextStyle(
-          color: Colors.white,
+          color: Colors.teal,
         ),
       ),
       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
@@ -125,12 +124,10 @@ class ShowInformation {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          backgroundColor: Colors.teal,
+          backgroundColor: Colors.grey[850],
           title: Text(
             "Are you sure you want to SignOut?",
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
+            style: TextStyle(fontSize: 18.0, color: Colors.white),
           ),
           actions: [
             cancelbutton,
