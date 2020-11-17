@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MaterialApp(
-    home: LogIn(),
-  ));
+  Firebase.initializeApp().then((value) {
+    runApp(MaterialApp(
+      home: LogIn(),
+    ));
+  });
 }
 
 class MyApp extends StatelessWidget {
