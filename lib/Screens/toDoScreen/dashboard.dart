@@ -6,6 +6,7 @@ import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/completedTask.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/dashboard_custom_textfield.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/dashboard_dateandtime_.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/showInformation.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/tobedoneScreen.dart';
 import 'package:mytodoapp/Screens/toDoScreen/frontend/viewHolderForIcons.dart';
 
@@ -80,7 +81,7 @@ class _MainActivityState extends State<MainDashboard> {
                 color: Colors.teal,
               ),
               iconSize: 35.0,
-              onPressed: () {},
+              onPressed: callSignOut,
             )
           ],
         ),
@@ -154,7 +155,7 @@ class _MainActivityState extends State<MainDashboard> {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter mystate) {
             return Container(
-                height: MediaQuery.of(context).copyWith().size.height * 0.65,
+                height: MediaQuery.of(context).copyWith().size.height * 0.7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -252,4 +253,9 @@ class _MainActivityState extends State<MainDashboard> {
   void setTitleForTask(String title) => this.title = title;
 
   void setDescriptionForTask(String desc) => this.desc = desc;
+
+  callSignOut() {
+    ShowInformation()
+        .onSignOut(context: context, notificationManager: notificationManager);
+  }
 }
