@@ -183,19 +183,7 @@ class LoginPageState extends State<LogIn> {
 
   Widget _googleSignInButton() {
     return FlatButton(
-      onPressed: () {
-        signInWithGoogle().then((result) {
-          if (result != null) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return MainDashboard(FirebaseAuth.instance.currentUser.email);
-                },
-              ),
-            );
-          }
-        });
-      },
+      onPressed: callGoogleSignIn,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -248,5 +236,19 @@ class LoginPageState extends State<LogIn> {
         });
       });
     }
+  }
+
+  callGoogleSignIn() {
+    signInWithGoogle().then((result) {
+      if (result != null) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return MainDashboard(FirebaseAuth.instance.currentUser.email);
+            },
+          ),
+        );
+      }
+    });
   }
 }
