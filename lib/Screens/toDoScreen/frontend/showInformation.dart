@@ -25,7 +25,7 @@ class ShowInformation {
         child: Text(
           "Delete",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.teal,
           ),
         ),
         onPressed: () {
@@ -42,7 +42,7 @@ class ShowInformation {
       child: Text(
         "Cancel",
         style: TextStyle(
-          color: Colors.white,
+          color: Colors.teal,
         ),
       ),
       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
@@ -54,11 +54,19 @@ class ShowInformation {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          backgroundColor: Colors.teal,
+          backgroundColor: Colors.grey[850],
           title: Text(
+            e['Title'],
+            style: TextStyle(
+              fontSize: 22.0,
+              color: Colors.white,
+            ),
+          ),
+          content: Text(
             "Are you sure you want to delete?",
             style: TextStyle(
               fontSize: 18.0,
+              color: Colors.white,
             ),
           ),
           actions: [

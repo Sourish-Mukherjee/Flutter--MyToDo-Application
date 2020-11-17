@@ -60,12 +60,12 @@ class CompletedTask {
                                 key: ObjectKey(e),
                                 onTap: () =>
                                     ShowInformation().popupDialog(context, e),
-                                onDoubleTap: () => ShowInformation()
+                                /*onDoubleTap: () => ShowInformation()
                                     .showOnDoubleTap(
                                         email, context, e, snapshot,
                                         notificationManager:
-                                            notificationManager),
-                                child: ViewHolder(e, false)))
+                                            notificationManager),*/
+                                child: ViewHolder(e, false,email,snapshot,notificationManager)))
                             .toList(),
                         onReorder: onReorder),
                   );

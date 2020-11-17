@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:mytodoapp/Screens/toDoScreen/frontend/showInformation.dart';
+import 'package:mytodoapp/Screens/toDoScreen/backend/notificationManager.dart';
 
 class ViewHolder extends StatelessWidget {
   final DocumentSnapshot documentSnapshot;
   final bool _field;
+  final String _email;
+  final AsyncSnapshot snapshot;
+  final NotificationManager _notificationManager;
   final Map<String, Color> _iconColorMap = {
     "education.png": Colors.yellow,
     "sports.png": Colors.white,
@@ -14,20 +19,20 @@ class ViewHolder extends StatelessWidget {
     "message.png": Colors.cyan,
     "office.png": Colors.pink
   };
-  ViewHolder(this.documentSnapshot, this._field);
+  ViewHolder(this.documentSnapshot, this._field, this._email,this.snapshot,this._notificationManager);
   @override
   Widget build(BuildContext context) {
     Timestamp timestamp = documentSnapshot['DateTimeStamp'];
     if (_field && DateTime.now().difference(timestamp.toDate()).inSeconds < 0) {
-      return _getContainer();
+      return _getContainer(context);
     } else if (!_field &&
         DateTime.now().difference(timestamp.toDate()).inSeconds > 0) {
-      return _getContainer();
+      return _getContainer(context);
     }
     return Container();
   }
 
-  Widget _getContainer() {
+  Widget _getContainer(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.only(left: 10, top: 20, bottom: 20),
@@ -60,12 +65,22 @@ class ViewHolder extends StatelessWidget {
               ),
             ),
           ),
-          Theme(
+          IconButton(
+            icon: Icon(
+              Icons.delete,
+              color: Colors.teal,
+              size: 35.0,
+            ),
+            onPressed: () => ShowInformation()
+                                    .showOnDoubleTap(
+                                        this._email, context, this.documentSnapshot, snapshot,
+                                        notificationManager:
+                                            _notificationManager),
+          ),
+          /*Theme(
             data: ThemeData(
               cardColor: Colors.black,
             ),
-            child: Padding(
-              padding: EdgeInsets.only(right: 12.0),
               child: PopupMenuButton(
                 itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                   PopupMenuItem(
@@ -74,18 +89,23 @@ class ViewHolder extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   )),
                   PopupMenuItem(
-                      child: Text(
-                    "Delete",
-                    style: TextStyle(color: Colors.white),
+                      child: TextButton(
+                        onPressed: () => ShowInformation()
+                                    .showOnDoubleTap(
+                                        this._email, context, this.documentSnapshot, snapshot,
+                                        notificationManager:
+                                            _notificationManager),
+                    child: Text("Delete",
+                    style: TextStyle(color: Colors.white),)
                   ))
                 ],
+                offset: Offset(0,100),
                 icon: Icon(
                   Icons.more_vert,
                   color: Colors.white,
                 ),
               ),
-            ),
-          ),
+            ),*/
         ],
       ),
     );
