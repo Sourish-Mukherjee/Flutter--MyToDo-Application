@@ -12,9 +12,28 @@ class LogIn extends StatefulWidget {
 }
 
 class LoginPageState extends State<LogIn> {
-  String _email, _password;
+  String _email="", _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final myController=TextEditingController();
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    myController.addListener(setEmail);
+  }
+
+  @override
+  void dispose(){
+    myController.dispose();
+    super.dispose();
+  }
+
+  void setEmail(){
+    _email=myController.text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,13 +62,13 @@ class LoginPageState extends State<LogIn> {
                                 Container(
                                     width: 300,
                                     child: TextFormField(
+                                      controller: myController,
                                       validator: (value) {
                                         if (value.isEmpty) {
                                           return "Can't be Empty!";
                                         }
                                         return null;
                                       },
-                                      onSaved: (newValue) => _email = newValue,
                                       obscureText: false,
                                       style: TextStyle(color: Colors.white),
                                       keyboardType: TextInputType.emailAddress,
@@ -115,12 +134,19 @@ class LoginPageState extends State<LogIn> {
                                         ),
                                       ),
                                       onTap: () {
+                                        if(_email.isEmpty){
+                                           Fluttertoast.showToast(
+                                            msg:
+                                                "Email can't be empty");
+                                        }
+                                        else{
                                         FirebaseAuth.instance
                                             .sendPasswordResetEmail(
                                                 email: _email);
                                         Fluttertoast.showToast(
                                             msg:
                                                 'Email has been sent with password reset option!');
+                                        }
                                       }),
                                 ),
                                 SizedBox(height: 25),
