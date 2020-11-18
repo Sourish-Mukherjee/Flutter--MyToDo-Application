@@ -57,14 +57,14 @@ class CompletedTask {
                     child: ReorderableListView(
                         children: _docs
                             .map((e) => InkWell(
-                                key: ObjectKey(e),
-                                onTap: () =>
-                                    ShowInformation().popupDialog(context, e),
-                                /*onDoubleTap: () => ShowInformation()
+                                key: ObjectKey(e), 
+                                onDoubleTap: () => ShowInformation()
                                     .showOnDoubleTap(
                                         email, context, e, snapshot,
                                         notificationManager:
-                                            notificationManager),*/
+                                            notificationManager),
+                                onTap: () =>
+                                    ShowInformation().popupDialog(context, e),
                                 child: ViewHolder(e, false,email,snapshot,notificationManager)))
                             .toList(),
                         onReorder: onReorder),

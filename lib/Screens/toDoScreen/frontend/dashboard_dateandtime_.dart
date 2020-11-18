@@ -73,5 +73,17 @@ class _DashBoardDateTimeState extends State<DashBoardDateTime> {
           DateTime(
               d.year, d.month, d.day, selectedTime.hour, selectedTime.minute));
     }
+    /*else{
+      d=DateTime.now();
+      selectedTime=TimeOfDay.now();
+      var date = DateTime.parse(d.toString());
+      String formattedDate = "${date.day}-${date.month}-${date.year}";
+      widget?.function(
+          widget?.state,
+          formattedDate,
+          selectedTime.format(context),
+          DateTime(
+              d.year, d.month, d.day, selectedTime.hour, selectedTime.minute));
+    }*/
   }
 }

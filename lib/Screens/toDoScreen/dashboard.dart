@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/iconColor.dart';
 import 'package:mytodoapp/Screens/toDoScreen/backend/makeChanges.dart';
@@ -12,6 +13,8 @@ import 'package:mytodoapp/Screens/toDoScreen/frontend/viewHolderForIcons.dart';
 
 class MainDashboard extends StatefulWidget {
   final String _email;
+  final String title="";
+  final String desc="";
   final NotificationManager notificationManager = NotificationManager();
   MainDashboard(this._email);
   @override
@@ -204,13 +207,32 @@ class _MainActivityState extends State<MainDashboard> {
                     SizedBox(height: 10),
                     MaterialButton(
                       onPressed: () {
+                        title=DashboardCustomTextField.getTitle().text;
+                        desc=DashboardCustomTextField.getDesc().text;
+                        if(title.isEmpty){
+                          title="Undefined";
+                          Fluttertoast.showToast(msg: "Title missing\nDefault title set to 'Undefined'");
+                        }
+                        if(desc.isEmpty){
+                          desc="Undefined";
+                          Fluttertoast.showToast(msg: "Description missing\nDefault description set to 'Undefined'");
+                        }
+                        /*if (chosenDate==null){
+                          var d = DateTime.parse(DateTime.now().toString());
+                          chosenDate="${d.day}-${d.month}-${d.year}";
+                          Fluttertoast.showToast(msg: 'Date not selected\nDefault date set to now');
+                        }
+                        if (chosenTime==null){
+                          chosenTime=TimeOfDay.now().format(context);
+                          Fluttertoast.showToast(msg: 'Time not selected\nDefault time set to now');
+                        }*/
                         MakeChanges(
                                 email: _email,
                                 set: ToDoScreenWidget.getSet(),
                                 notificationManager: notificationManager)
                             .createRecord(
-                                DashboardCustomTextField.getTitle().text,
-                                DashboardCustomTextField.getDesc().text,
+                                title,
+                                desc,
                                 chosenDate,
                                 chosenTime,
                                 chosenDateTime,
@@ -240,6 +262,15 @@ class _MainActivityState extends State<MainDashboard> {
   void updated(
       StateSetter updateState, String date, String time, DateTime dateTime) {
     updateState(() {
+      /*if (date==null){
+        var d = DateTime.parse(DateTime.now().toString());
+        date="${d.day}-${d.month}-${d.year}";
+        Fluttertoast.showToast(msg: 'Date not selected\nDefault date set to now');
+      }
+      if (time==null){
+        time=TimeOfDay.now().format(context);
+        Fluttertoast.showToast(msg: 'Time not selected\nDefault time set to now');
+      }*/
       this.chosenDate = date;
       this.chosenTime = time;
       this.chosenDateTime = dateTime;
