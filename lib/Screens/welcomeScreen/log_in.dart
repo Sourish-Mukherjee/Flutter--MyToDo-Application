@@ -20,7 +20,6 @@ class LoginPageState extends State<LogIn> {
   @override
   void initState() {
     super.initState();
-
     myController.addListener(setEmail);
   }
 

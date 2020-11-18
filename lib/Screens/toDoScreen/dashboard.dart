@@ -13,8 +13,6 @@ import 'package:mytodoapp/Screens/toDoScreen/frontend/viewHolderForIcons.dart';
 
 class MainDashboard extends StatefulWidget {
   final String _email;
-  final String title="";
-  final String desc="";
   final NotificationManager notificationManager = NotificationManager();
   MainDashboard(this._email);
   @override
@@ -47,6 +45,7 @@ class _MainActivityState extends State<MainDashboard> {
       toDoScreenWidget.getColumn(),
       completedTask.getCompletedColumn()
     ];
+    _chosenIconColor = IconColor("", Colors.amber);
   }
 
   @override
@@ -200,53 +199,45 @@ class _MainActivityState extends State<MainDashboard> {
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: 8,
-                          itemBuilder: (context, index) =>
+                          itemBuilder: (rcontext, index) =>
                               ViewHolderForIcons(index, selectedIcon)),
                     ),
                     DashBoardDateTime(updated, mystate),
                     SizedBox(height: 10),
                     MaterialButton(
                       onPressed: () {
-                        title=DashboardCustomTextField.getTitle().text;
-                        desc=DashboardCustomTextField.getDesc().text;
-                        if(title.isEmpty){
-                          title="Undefined";
-                          Fluttertoast.showToast(msg: "Title missing\nDefault title set to 'Undefined'");
+                        title = DashboardCustomTextField.getTitle().text;
+                        desc = DashboardCustomTextField.getDesc().text;
+                        if (title.isNotEmpty &&
+                            desc.isNotEmpty &&
+                            chosenDate.isNotEmpty &&
+                            chosenDate.isNotEmpty &&
+                            _chosenIconColor.getIcon().isNotEmpty) {
+                          MakeChanges(
+                                  email: _email,
+                                  set: ToDoScreenWidget.getSet(),
+                                  notificationManager: notificationManager)
+                              .createRecord(
+                                  title,
+                                  desc,
+                                  chosenDate,
+                                  chosenTime,
+                                  chosenDateTime,
+                                  _chosenIconColor,
+                                  ToDoScreenWidget.getIndex());
+                          Navigator.of(context, rootNavigator: true).pop();
+                          DashboardCustomTextField.getTitle().clear();
+                          DashboardCustomTextField.getDesc().clear();
+                          setState(() {
+                            chosenTime = "";
+                            chosenDate = "";
+                            chosenDateTime = null;
+                            _chosenIconColor = null;
+                          });
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Please fill all details");
                         }
-                        if(desc.isEmpty){
-                          desc="Undefined";
-                          Fluttertoast.showToast(msg: "Description missing\nDefault description set to 'Undefined'");
-                        }
-                        /*if (chosenDate==null){
-                          var d = DateTime.parse(DateTime.now().toString());
-                          chosenDate="${d.day}-${d.month}-${d.year}";
-                          Fluttertoast.showToast(msg: 'Date not selected\nDefault date set to now');
-                        }
-                        if (chosenTime==null){
-                          chosenTime=TimeOfDay.now().format(context);
-                          Fluttertoast.showToast(msg: 'Time not selected\nDefault time set to now');
-                        }*/
-                        MakeChanges(
-                                email: _email,
-                                set: ToDoScreenWidget.getSet(),
-                                notificationManager: notificationManager)
-                            .createRecord(
-                                title,
-                                desc,
-                                chosenDate,
-                                chosenTime,
-                                chosenDateTime,
-                                _chosenIconColor,
-                                ToDoScreenWidget.getIndex());
-                        Navigator.of(context, rootNavigator: true).pop();
-                        DashboardCustomTextField.getTitle().clear();
-                        DashboardCustomTextField.getDesc().clear();
-                        setState(() {
-                          chosenTime = "";
-                          chosenDate = "";
-                          chosenDateTime = null;
-                          _chosenIconColor = null;
-                        });
                       },
                       color: Colors.teal,
                       child: Icon(Icons.save, size: 50, color: Colors.white),
@@ -280,10 +271,6 @@ class _MainActivityState extends State<MainDashboard> {
   void selectedIcon(IconColor chosenIconColor) {
     this._chosenIconColor = chosenIconColor;
   }
-
-  void setTitleForTask(String title) => this.title = title;
-
-  void setDescriptionForTask(String desc) => this.desc = desc;
 
   callSignOut() {
     ShowInformation()
