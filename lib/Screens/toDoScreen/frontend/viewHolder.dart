@@ -19,7 +19,8 @@ class ViewHolder extends StatelessWidget {
     "message.png": Colors.cyan,
     "office.png": Colors.pink
   };
-  ViewHolder(this.documentSnapshot, this._field, this._email,this.snapshot,this._notificationManager);
+  ViewHolder(this.documentSnapshot, this._field, this._email, this.snapshot,
+      this._notificationManager);
   @override
   Widget build(BuildContext context) {
     Timestamp timestamp = documentSnapshot['DateTimeStamp'];
@@ -71,41 +72,10 @@ class ViewHolder extends StatelessWidget {
               color: Colors.teal,
               size: 35.0,
             ),
-            onPressed: () => ShowInformation()
-                                    .showOnDoubleTap(
-                                        this._email, context, this.documentSnapshot, snapshot,
-                                        notificationManager:
-                                            _notificationManager),
+            onPressed: () => ShowInformation().showOnDoubleTap(
+                this._email, context, this.documentSnapshot, snapshot,
+                notificationManager: _notificationManager),
           ),
-          /*Theme(
-            data: ThemeData(
-              cardColor: Colors.black,
-            ),
-              child: PopupMenuButton(
-                itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                  PopupMenuItem(
-                      child: Text(
-                    "Share",
-                    style: TextStyle(color: Colors.white),
-                  )),
-                  PopupMenuItem(
-                      child: TextButton(
-                        onPressed: () => ShowInformation()
-                                    .showOnDoubleTap(
-                                        this._email, context, this.documentSnapshot, snapshot,
-                                        notificationManager:
-                                            _notificationManager),
-                    child: Text("Delete",
-                    style: TextStyle(color: Colors.white),)
-                  ))
-                ],
-                offset: Offset(0,100),
-                icon: Icon(
-                  Icons.more_vert,
-                  color: Colors.white,
-                ),
-              ),
-            ),*/
         ],
       ),
     );

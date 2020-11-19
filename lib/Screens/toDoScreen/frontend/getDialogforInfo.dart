@@ -144,7 +144,7 @@ class InfoDialog {
                 child: InkWell(
                   onTap: () => Navigator.of(context, rootNavigator: true).pop(),
                   child: Text(
-                    "Done",
+                    "OK",
                     style: GoogleFonts.ubuntu(
                         fontSize: 18,
                         color: _iconColorMap[documentSnapshot['icon']]),
