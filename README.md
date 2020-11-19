@@ -1,16 +1,18 @@
-# mytodoapp
+# MyToDoApp 
+## Flutter Project
 
-A new Flutter project.
+# What is this about ?
 
-## Getting Started
+This app is has the basic functionality of a mytodo app, where the user will be able to create task and remind him of the so created task.
 
-This project is a starting point for a Flutter application.
+## Functionalities
 
-A few resources to get you started if this is your first Flutter project:
+- Notifications of the reminded Task
+- Firebase Authentication For Privacy
+- Sign In With Google Feature
+- Cloud Firestore for the saving of data
+- RealTime Cross Platform support and updation of data
+- Customisable Tasks with categories
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Screenshots
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
