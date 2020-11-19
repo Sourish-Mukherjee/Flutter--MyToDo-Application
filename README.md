@@ -16,3 +16,4 @@ This app is has the basic functionality of a mytodo app, where the user will be 
 
 ## Screenshots
 
+(https://imgur.com/a/CdS44dB)
