@@ -232,7 +232,7 @@ class _MainActivityState extends State<MainDashboard> {
                             chosenTime = "";
                             chosenDate = "";
                             chosenDateTime = null;
-                            _chosenIconColor = null;
+                            _chosenIconColor = IconColor("", Colors.amber);
                           });
                         } else {
                           Fluttertoast.showToast(
@@ -253,15 +253,6 @@ class _MainActivityState extends State<MainDashboard> {
   void updated(
       StateSetter updateState, String date, String time, DateTime dateTime) {
     updateState(() {
-      /*if (date==null){
-        var d = DateTime.parse(DateTime.now().toString());
-        date="${d.day}-${d.month}-${d.year}";
-        Fluttertoast.showToast(msg: 'Date not selected\nDefault date set to now');
-      }
-      if (time==null){
-        time=TimeOfDay.now().format(context);
-        Fluttertoast.showToast(msg: 'Time not selected\nDefault time set to now');
-      }*/
       this.chosenDate = date;
       this.chosenTime = time;
       this.chosenDateTime = dateTime;

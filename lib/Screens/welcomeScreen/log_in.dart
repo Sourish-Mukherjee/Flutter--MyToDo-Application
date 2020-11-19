@@ -252,8 +252,6 @@ class LoginPageState extends State<LogIn> {
         }).catchError(
                 (onError) => Fluttertoast.showToast(msg: onError.toString()));
       } catch (e) {
-        //This is for Debugging purpose only.
-        //print(e.toString());
       }
       Future.delayed(Duration(seconds: 1)).whenComplete(() {
         setState(() {
