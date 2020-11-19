@@ -68,11 +68,6 @@ class ToDoScreenWidget {
                                 key: ObjectKey(e),
                                 onTap: () =>
                                     ShowInformation().popupDialog(context, e),
-                                onDoubleTap: () => ShowInformation()
-                                    .showOnDoubleTap(
-                                        email, context, e, snapshot,
-                                        notificationManager:
-                                            notificationManager),
                                 child: ViewHolder(e, true, email, snapshot,
                                     notificationManager)))
                             .toList(),
