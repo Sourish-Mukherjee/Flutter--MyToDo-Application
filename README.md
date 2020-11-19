@@ -16,4 +16,10 @@ This app is has the basic functionality of a mytodo app, where the user will be 
 
 ## Screenshots
 
+![](screenshots/flutter_01.png)
+![](screenshots/flutter_02.png)
+![](screenshots/flutter_03.png)
+![](screenshots/flutter_04.png)
+![](screenshots/flutter_05.png)
+
 (https://imgur.com/a/CdS44dB)
